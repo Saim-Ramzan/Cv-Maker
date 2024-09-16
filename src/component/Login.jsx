@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-// import './Login.css';
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { useFormik } from "formik";
-import Header from "./commonComponent/Header";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 
 const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
+	const navigate = useNavigate();
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -21,7 +22,17 @@ const Login = () => {
 			password: "",
 		},
 		onSubmit: (value) => {
-			console.log(value);
+			try {
+				signInWithEmailAndPassword(auth, value.email, value.password).then((userCredential) => {
+					const user = userCredential.user;
+                    localStorage.setItem("userToken", user.uid)
+					console.log("user",user);
+					navigate("/home")
+				})
+			} catch (error) {
+				
+			}
+
 		},
 	})
 	return (

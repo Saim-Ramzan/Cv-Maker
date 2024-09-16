@@ -24,8 +24,9 @@ const Signup = () => {
         onSubmit: (value) => {
             console.log(value);
             try {
-                createUserWithEmailAndPassword(auth, value.email, value.password)
-                navigate("/login")
+                createUserWithEmailAndPassword(auth, value.email, value.password).then(() => {
+                    navigate("/login")
+                })
                 updateProfile(auth.currentUser, {
                     displayName: value.username
                 })

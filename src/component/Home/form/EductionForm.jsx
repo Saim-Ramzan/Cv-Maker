@@ -24,9 +24,14 @@ const validateMessages = {
   };
   /* eslint-enable no-template-curly-in-string */
   
+// Degree(s) Obtained
+// Major/Field of Study
+// Institution Name
+// Graduation Date
+// Relevant Coursework (if applicable)
+// Honors or Awards
 
-  
-  const PersonalForm = () => {
+  const EducationForm = () => {
   const onFinish =  (values) => {
     console.log(values);
     
@@ -82,17 +87,10 @@ const validateMessages = {
       <Input />
     </Form.Item>
     <Form.Item
-      name={['user', 'age']}
-      label="Age"
-      rules={[
-        {
-          type: 'number',
-          min: 0,
-          max: 99,
-        },
-      ]}
+      name={['user', 'school']}
+      label="School"
     >
-      <InputNumber />
+      <Input />
     </Form.Item>
     <Form.Item name={['user', 'website']} label="Website">
       <Input />
@@ -114,4 +112,4 @@ const validateMessages = {
     </div>;
 };
 
-export default PersonalForm;
+export default EducationForm;
