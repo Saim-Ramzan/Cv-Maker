@@ -40,11 +40,7 @@ const validateMessages = {
         },
       };
       const docRef =  addDoc(collection(db, auth.currentUser.uid), userData)
-      .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
-      })
-      
-      console.log("Document written with ID: ", docRef);
+            console.log("Document written with ID: ", docRef);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
