@@ -1,11 +1,12 @@
 import React from 'react'
-import {  Outlet, useNavigate } from 'react-router-dom'
+import {  Outlet, Navigate } from 'react-router-dom'
 import Layout from './Layout';
 
 function ProtectedRoutes() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   let token =  localStorage.getItem("userToken")
-  return token ? <Outlet /> : navigate('/login') 
+    
+  return token ? <Outlet /> :  <Navigate to='/login'/>
 }
 
 export default ProtectedRoutes

@@ -1,13 +1,14 @@
-import React from 'react'
-import Clean from '../template/Clean'
+import React from "react";
+import TemplateCard from "../commonComponent/TemplateCard";
+import RenderCard from "../commonComponent/RenderCard";
 
 function TemplateMain() {
   return (
     <>
-    <Clean />
-    <div>TemplateMain</div>
+      <RenderCard />
+     
     </>
-  )
+  );
 }
 
-export default TemplateMain
+export default TemplateMain;

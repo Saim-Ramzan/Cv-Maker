@@ -2,13 +2,14 @@ import React from "react";
 import { Button, Form, Input,DatePicker } from 'antd';
 import { addDoc, collection } from "firebase/firestore"; 
 import { auth, db } from "../../../firebase";
+import dayjs from "dayjs";
 
 const layout = {
   labelCol: {
-    span: 8,
+    span: 30,
   },
   wrapperCol: {
-    span: 16,
+    span: 30,
   },
 };
 
@@ -26,9 +27,13 @@ const EducationForm = () => {
   const onFinish = async (values) => {
     const rangeValue = values['range-picker'];
 
-    const datePicker ={
-      'range-picker': [rangeValue[0].format('YYYY-MM-DD'), rangeValue[1].format('YYYY-MM-DD')],
-    }
+    const formattedStartDate = rangeValue && rangeValue[0]
+      ? dayjs(rangeValue[0]).format('YYYY-MM-DD')
+      : null;
+    const formattedEndDate = rangeValue && rangeValue[1]
+      ? dayjs(rangeValue[1]).format('YYYY-MM-DD')
+      : null;
+
     console.log("value",values);
     
     try {
@@ -38,11 +43,11 @@ const EducationForm = () => {
       
       const Education = {
         educationDetails: {
-          name: values.user.name,
-          email: values.user.email,
-          school: values.user.school,
-          website: values.user.website,
-          startDate: values.user.datePicker
+          degree: values.user.degree,
+          institutionName: values.user.institutionName,
+          location: values.user.location,
+          startDate: formattedStartDate,
+          endDate: formattedEndDate,
         },
       };
 
@@ -55,8 +60,9 @@ const EducationForm = () => {
   };
 
   return (
-    <div className="flex items-start">
+    <div className="flex justify-center ">
       <Form 
+      className=""
         {...layout}
         layout="vertical"
         name="nest-messages"
@@ -65,25 +71,26 @@ const EducationForm = () => {
         validateMessages={validateMessages}
       >
         <Form.Item
-          name={['user', 'name']}
-          label="Name"
+          name={['user', 'degree']}
+          label="Degree(s) Obtained"
           rules={[{ required: true }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          name={['user', 'email']}
-          label="Email"
-          rules={[{ type: 'email' }]}
+          name={['user', 'institutionName']}
+          label="Institution Name"
+          rules={[{ required: true }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item name="range-picker" label="StartDate" >
+        <Form.Item name="range-picker" label="Graduation Date" 
+        >
       <RangePicker />
     </Form.Item>
         <Form.Item
-          name={['user', 'school']}
-          label="School"
+          name={['user', 'location']}
+          label="Location"
         >
           <Input />
         </Form.Item>

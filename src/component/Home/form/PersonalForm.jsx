@@ -4,10 +4,10 @@ import { addDoc, collection } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 const layout = {
   labelCol: {
-    span: 8,
+    span: 25,
   },
   wrapperCol: {
-    span: 16,
+    span: 25,
   },
 };
 
@@ -31,23 +31,26 @@ const validateMessages = {
     console.log(values);
     
     try {
-      const userData = {
+      const personal = {
         personalDetails: {
           name: values.user.name,
           email: values.user.email,
           age: values.user.age,
-          introduction: values.user.introduction
+          introduction: values.user.introduction,
+          language: values.user.language
         },
       };
-      const docRef =  addDoc(collection(db, auth.currentUser.uid), userData)
+      const docRef =  addDoc(collection(db, auth.currentUser.uid), personal)
             console.log("Document written with ID: ", docRef);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
-    return <div className="flex ">
+    return <div className="flex justify-center">
          <Form 
     {...layout}
+    className="w-[20rem]"
+    layout="vertical"
     name="nest-messages"
     onFinish={onFinish}
     style={{
@@ -74,6 +77,7 @@ const validateMessages = {
           type: 'email',
         },
       ]}
+      required
     >
       <Input />
     </Form.Item>
@@ -87,13 +91,17 @@ const validateMessages = {
           max: 99,
         },
       ]}
+      required
     >
       <InputNumber />
     </Form.Item>
-    <Form.Item name={['user', 'website']} label="Website">
+    
+    <Form.Item name={['user', 'language']} required label="Language">
       <Input />
     </Form.Item>
-    <Form.Item name={['user', 'introduction']} label="Introduction">
+    <Form.Item name={['user', 'introduction']} required label="Introduction" rules={
+      [{  min: 10, max: 100 }]
+  }>
       <Input.TextArea />
     </Form.Item>
     <Form.Item
