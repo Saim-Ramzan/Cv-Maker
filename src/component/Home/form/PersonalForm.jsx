@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Form, Input, InputNumber } from 'antd';
 import { addDoc, collection } from "firebase/firestore"; 
 import { auth, db } from "../../../firebase";
+import { toast } from "react-toastify";
 const layout = {
   labelCol: {
     span: 25,
@@ -24,12 +25,11 @@ const validateMessages = {
   };
   /* eslint-enable no-template-curly-in-string */
   
-
-  
-  const PersonalForm = () => {
-  const onFinish =  (values) => {
-    console.log(values);
+  const PersonalForm = ({ goToNextTab }) => {
+    const [form] = Form.useForm()
     
+
+    const onFinish =  (values) => {
     try {
       const personal = {
         personalDetails: {
@@ -41,13 +41,16 @@ const validateMessages = {
         },
       };
       const docRef =  addDoc(collection(db, auth.currentUser.uid), personal)
-            console.log("Document written with ID: ", docRef);
+      toast.success("Personal added successfully");
+            form.resetFields()
+      goToNextTab()
     } catch (e) {
-      console.error("Error adding document: ", e);
+      toast.error("Error adding document: ", e);
     }
   };
     return <div className="flex justify-center">
          <Form 
+         form={form}
     {...layout}
     className="w-[20rem]"
     layout="vertical"
@@ -110,7 +113,7 @@ const validateMessages = {
         offset: 8,
       }}
     >
-      <Button type="primary" htmlType="submit">
+      <Button  type="primary" htmlType="submit">
         Submit
       </Button>
     </Form.Item>

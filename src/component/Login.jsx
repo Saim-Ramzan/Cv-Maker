@@ -7,6 +7,7 @@ import { FaTwitter } from "react-icons/fa";
 import { useFormik } from "formik";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import { toast } from "react-toastify";
 
 const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
@@ -26,11 +27,13 @@ const Login = () => {
 				signInWithEmailAndPassword(auth, value.email, value.password).then((userCredential) => {
 					const user = userCredential.user;
                     localStorage.setItem("userToken", user.uid)
-					console.log("user",user);
+					toast.success("Login Successful")
 					navigate("/home")
+				}).catch((error) => {
+					toast.error(error.message)
 				})
 			} catch (error) {
-				
+				toast.error(error.message)
 			}
 
 		},

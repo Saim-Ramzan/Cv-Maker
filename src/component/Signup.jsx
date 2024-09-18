@@ -7,6 +7,7 @@ import { FaGithub } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import {auth} from "../firebase"
+import { toast } from "react-toastify";
 const Signup = () => {
     const [showPassword, setShowPassword] = useState(false);
 
@@ -22,16 +23,18 @@ const Signup = () => {
             username: "",  
         },
         onSubmit: (value) => {
-            console.log(value);
             try {
                 createUserWithEmailAndPassword(auth, value.email, value.password).then(() => {
                     navigate("/login")
+                    toast.success("Signup Successful")
+                }).catch((error) => {
+                    toast.error(error.message)
                 })
                 updateProfile(auth.currentUser, {
                     displayName: value.username
                 })
             } catch (error) {
-                console.log(error);
+                toast.error(error);
             }
         },
     })
@@ -92,7 +95,7 @@ const Signup = () => {
                             {showPassword ? <FaEyeSlash /> : <FaEye />}
                         </div>
                     </div>
-                    <button type="submit" className="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Login</button>
+                    <button type="submit" className="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Sign</button>
                     <p className="flex pl-2 text-sm leading-4 text-gray-400 my-2">
                         Do you already have an account?
                         <NavLink to="/login" className="text-black  pl-1 text-sm -my-[2px] hover:underline hover:text-indigo-400">

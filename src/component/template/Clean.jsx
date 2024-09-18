@@ -4,27 +4,44 @@ import {  db } from "../../firebase";
 import avatarImage from "../../assests/images.jpeg";
 
 function Clean() {
-  const [userPersonalDetail, setUserPersonalDetail] = useState({});
-  const [userExperienceDetail, setUserExperienceDetail] = useState({});
+  const [personal, setPersonal] = useState([]);
 
   const userUid = localStorage.getItem("userToken");
 
-  useEffect(() => {
-    const getQuearyData = async () => {
-      const q = collection(db, userUid);
-      const querySnapshot = await getDocs(q);
-      querySnapshot.docs.map((item) => {
-        const data = item.data();
-        setUserExperienceDetail(data.experienceDetails);
-        setUserPersonalDetail(data.personalDetails);
-        console.log("personalDetails", data.personalDetails);
-      });
-    };
-    getQuearyData();
-  }, []);
 
-  // console.log("userPersonalDetail",userPersonalDetail)
-  // console.log("userExperienceDetail",userExperienceDetail)
+  useEffect(() => {
+
+    const fetchData = async () => {
+      const personalData = [];
+      const q = collection(db, userUid);
+
+      try {
+        const querySnapshot = await getDocs(q);
+        querySnapshot.docs.forEach((item) => {
+          const data = item.data();
+          personalData.push(data);
+          
+        });
+        setPersonal(personalData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  
+  const downloadCv = ()=>{
+    window.print()
+  }
+  const getPersonalDetails = personal.find(item => item.personalDetails)?.personalDetails;
+  const getEductionDetails = personal.find(item => item.educationDetails)?.educationDetails;
+  const getExperienceDetails = personal.find(item => item.experienceDetails)?.experienceDetails;
+  const getSkillDetails = personal.find(item => item.skillsDetails)?.skillsDetails;
+
+  console.log("getExperienceDetails",getSkillDetails );
+
+  
 
   return (
     <div className="">
@@ -45,26 +62,24 @@ function Clean() {
           </h1>
           <ul className="space-y-2  font-medium">
             <li className="border-b border-black pb-2">
-              Name: {"" ? "" : "john"}{" "}
+              Name: {getPersonalDetails ? getPersonalDetails.name : "john"}{" "}
             </li>
-            <li>Email: {"" ? "" : "john.doe@example.com"}</li>
-            <li>Age: </li>
-            <li>languages: </li>
+            <li>Email: {getPersonalDetails ? getPersonalDetails.email : "john.doe@example.com"}</li>
+            <li>Age: {getPersonalDetails ? getPersonalDetails.age :"19"}</li>
+            <li>languages: {getPersonalDetails ? getPersonalDetails.language : "English"}</li>
           </ul>
           <h1 className="text-xl mt-4 bg-yellow-400 p-2  font-bold ">About</h1>
           <hr className="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700  " />
           <p>
             <span className="font-bold text-xl bg-yellow-400">
               Introduction:
-            </span>{" "}
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum
-            dolor sit amet consectetur adipisicing elit.Lorem ipsum dolor sit
-            amet consectetur adipisicing elit.
+            </span>
+            {getPersonalDetails ? getPersonalDetails.introduction : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum."}
           </p>
           <div  className="printDiv flex mt-8">
             <h3>Feel Free To Download</h3>
             <button
-              onClick={() => window.print()}
+              onClick={downloadCv}
               className=" cursor-pointer group relative flex gap-1.5 px-8 py-4 bg-black bg-opacity-80 text-[#f1f1f1] rounded-3xl hover:bg-opacity-70 transition font-semibold shadow-md"
             >
               Download
@@ -80,13 +95,13 @@ function Clean() {
           {/* Eduction details */}
           <ul className=" text-black p-5 font-medium bg-white my-2">
             <ul className="text-lg bg-yellow-400  p-1">Degree</ul>
-            <li className="py-1 pl-3">{"" ? "" : "MCA"}</li>
+            <li className="py-1 pl-3">{getEductionDetails ? getEductionDetails.degree : "MCA"}</li>
             <ul className="text-lg bg-yellow-400  p-1">Institution</ul>
-            <li className="py-1 pl-3">{"" ? "" : "University of Delhi"}</li>
+            <li className="py-1 pl-3">{getEductionDetails ? getEductionDetails.institutionName : "University of Delhi"}</li>
             <ul className="text-lg bg-yellow-400 w- p-1">Graduation Date</ul>
-            <li className="py-1 pl-3">{"" ? "" : "2022"}</li>
+            <li className="py-1 pl-3">{getEductionDetails ? getEductionDetails.startDate : "2022"} --- {getEductionDetails ? getEductionDetails.endDate : "2020"}</li>
             <ul className="text-lg bg-yellow-400  p-1">Location</ul>
-            <li className="py-1 pl-3">{"" ? "" : "Punjab"}</li>
+            <li className="py-1 pl-3">{getEductionDetails ? getEductionDetails.location : "Punjab"}</li>
           </ul>
           {/* experience details */}
           <h1 className="bg-yellow-400 text-center font-bold text-2xl p-2">
@@ -95,21 +110,30 @@ function Clean() {
           {/* Eduction details */}
           <ul className=" text-black p-5 font-medium bg-white my-2">
             <ul className="text-lg bg-yellow-400  p-1">Job Title</ul>
-            <li className="py-1 pl-3">{"" ? "" : "MCA"}</li>
+            <li className="py-1 pl-3">{getExperienceDetails ? getExperienceDetails.jobTitle : "MCA"}</li>
             <ul className="text-lg bg-yellow-400  p-1">Company Name</ul>
-            <li className="py-1 pl-3">{"" ? "" : "Enigmatix"}</li>
+            <li className="py-1 pl-3">{getExperienceDetails ? getExperienceDetails.companyName : "Enigmatix"}</li>
             <ul className="text-lg bg-yellow-400 w- p-1">Start Date</ul>
-            <li className="py-1 pl-3">{"" ? "" : "2022"}</li>
+            <li className="py-1 pl-3">{getExperienceDetails ? getExperienceDetails.startDate : "2022"}</li>
             <ul className="text-lg bg-yellow-400  p-1">Location</ul>
-            <li className="py-1 pl-3">{"" ? "" : "Punjab"}</li>
+            <li className="py-1 pl-3">{getExperienceDetails ? getExperienceDetails.location : "Punjab"}</li>
+            <ul className="text-lg bg-yellow-400  p-1">Description</ul>
+            <li className="py-1 pl-3">{getExperienceDetails ? getExperienceDetails.description : "Description"}</li>
           </ul>
           <h1 className="bg-yellow-400 text-center font-bold text-2xl p-2">
             Skill
           </h1>
           {/* Skill */}
           <ul className="list-disc list-inside flex text-black p-2 font-medium bg-white my-2">
-            <li className="py-1 pl-3">{"" ? "" : "Programmer"}</li>
-            <li className="py-1 pl-3">{"" ? "" : "Teamwork"}</li>
+            {getSkillDetails ? getSkillDetails.skills.split(' ').map(skill => (
+            <li className="py-1 pl-3" key={skill}>{skill}</li>
+          )) : (
+            <>
+              <li >JavaScript</li>
+              <li >React</li>
+              <li >Tailwind CSS</li>
+            </>
+          )}
           </ul>
         </div>
       </div>

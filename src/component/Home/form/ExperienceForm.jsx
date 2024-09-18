@@ -3,6 +3,7 @@ import { Button, Form, Input,DatePicker } from 'antd';
 import { addDoc, collection } from "firebase/firestore"; 
 import { auth, db } from "../../../firebase";
 import dayjs from "dayjs";
+import { toast } from "react-toastify";
 
 const layout = {
   labelCol: {
@@ -21,13 +22,12 @@ const validateMessages = {
     },
 };
 
-const ExperienceForm = () => {
-
+const ExperienceForm = ({goToNextTab}) => {
+  const [form] = Form.useForm()
   const onFinish = async (values) => {
     const rangeValue = values['date-picker'];
     const startDate = dayjs(rangeValue);
     const formattedStartDate = startDate.format('YYYY-MM-DD');
-    console.log("formattedStartDate",formattedStartDate);
     
 
     try {
@@ -41,20 +41,24 @@ const ExperienceForm = () => {
           companyName: values.user.companyName,
           location: values.user.location,
           startDate: formattedStartDate,
+          description: values.user.description,
         },
       };
 
       // Use the correct path for the collection
       const docRef = await addDoc(collection(db,  auth.currentUser.uid ), Experience);
-      console.log("Document written with ID: ", docRef.id);
+      toast.success("Experience added successfully");
+      form.resetFields();
+      goToNextTab()
     } catch (e) {
-      console.error("Error adding document: ", e);
+      toast.error("Error adding document: ", e);
     }
   };
 
   return (
     <div className="flex justify-center ">
       <Form 
+      form={form}
         {...layout}
         className="w-[20rem]"
         layout="vertical"
@@ -85,6 +89,14 @@ const ExperienceForm = () => {
           label="Location"
         >
           <Input />
+        </Form.Item>
+        <Form.Item
+          name={["user", "description"]}
+          required
+          label="Description"
+          rules={[{ min: 10, max: 100 }]}
+        >
+          <Input.TextArea />
         </Form.Item>
         <Form.Item
           wrapperCol={{ ...layout.wrapperCol, offset: 8 }}

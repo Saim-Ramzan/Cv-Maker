@@ -1,8 +1,9 @@
 import React from "react";
-import { Button, Form, Input,DatePicker } from 'antd';
-import { addDoc, collection } from "firebase/firestore"; 
+import { Button, Form, Input, DatePicker } from "antd";
+import { addDoc, collection } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import dayjs from "dayjs";
+import { toast } from "react-toastify";
 
 const layout = {
   labelCol: {
@@ -14,33 +15,35 @@ const layout = {
 };
 
 const validateMessages = {
-    required: '${label} is required!',
-    types: {
-      email: '${label} is not a valid email!',
-      number: '${label} is not a valid number!',
-    },
+  required: "${label} is required!",
+  types: {
+    email: "${label} is not a valid email!",
+    number: "${label} is not a valid number!",
+  },
 };
 
-const EducationForm = () => {
+const EducationForm = ({ goToNextTab }) => {
+  const [form] = Form.useForm();
+
   const { RangePicker } = DatePicker;
 
   const onFinish = async (values) => {
-    const rangeValue = values['range-picker'];
+    const rangeValue = values["range-picker"];
 
-    const formattedStartDate = rangeValue && rangeValue[0]
-      ? dayjs(rangeValue[0]).format('YYYY-MM-DD')
-      : null;
-    const formattedEndDate = rangeValue && rangeValue[1]
-      ? dayjs(rangeValue[1]).format('YYYY-MM-DD')
-      : null;
+    const formattedStartDate =
+      rangeValue && rangeValue[0]
+        ? dayjs(rangeValue[0]).format("YYYY-MM-DD")
+        : null;
+    const formattedEndDate =
+      rangeValue && rangeValue[1]
+        ? dayjs(rangeValue[1]).format("YYYY-MM-DD")
+        : null;
 
-    console.log("value",values);
-    
     try {
       if (!auth.currentUser) {
         throw new Error("User is not authenticated");
       }
-      
+
       const Education = {
         educationDetails: {
           degree: values.user.degree,
@@ -52,17 +55,23 @@ const EducationForm = () => {
       };
 
       // Use the correct path for the collection
-      const docRef = await addDoc(collection(db,  auth.currentUser.uid ), Education);
-      console.log("Document written with ID: ", docRef.id);
+      const docRef = await addDoc(
+        collection(db, auth.currentUser.uid),
+        Education
+      );
+      form.resetFields();
+      toast.success("Education added successfully");
+      goToNextTab();
     } catch (e) {
-      console.error("Error adding document: ", e);
+      toast.error("Error adding document: ", e);
     }
   };
 
   return (
     <div className="flex justify-center ">
-      <Form 
-      className=""
+      <Form
+        form={form}
+        className=""
         {...layout}
         layout="vertical"
         name="nest-messages"
@@ -71,38 +80,27 @@ const EducationForm = () => {
         validateMessages={validateMessages}
       >
         <Form.Item
-          name={['user', 'degree']}
+          name={["user", "degree"]}
           label="Degree(s) Obtained"
           rules={[{ required: true }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          name={['user', 'institutionName']}
+          name={["user", "institutionName"]}
           label="Institution Name"
           rules={[{ required: true }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item name="range-picker" label="Graduation Date" 
-        >
-      <RangePicker />
-    </Form.Item>
-        <Form.Item
-          name={['user', 'location']}
-          label="Location"
-        >
+        <Form.Item name="range-picker" label="Graduation Date">
+          <RangePicker />
+        </Form.Item>
+        <Form.Item name={["user", "location"]} label="Location">
           <Input />
         </Form.Item>
-        <Form.Item
-          name={['user', 'website']}
-          label="Website"
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          wrapperCol={{ ...layout.wrapperCol, offset: 8 }}
-        >
+        
+        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
           <Button type="primary" htmlType="submit">
             Submit
           </Button>

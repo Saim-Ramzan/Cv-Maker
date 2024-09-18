@@ -11,7 +11,9 @@ const Header = () => {
     <div className="header">
       <header className="flex border-b py-4 px-4 sm:px-10 bg-white font-sans min-h-[70px] tracking-wide relative z-50">
         <div className="flex flex-wrap items-center gap-4 w-full">
-          <h1 className="w-36 font-bold text-2xl">Cv Maker</h1>
+          <NavLink to={"/home"} className="w-36 font-bold text-2xl">
+            Cv Maker
+          </NavLink>
 
           <div
             id="collapseMenu"
@@ -43,21 +45,9 @@ const Header = () => {
                     Templates
                   </NavLink>
                 </li>
-                <li className="max-lg:border-b max-lg:py-3">
-                  <NavLink
-                    to={"/favorites"}
-                    className={({ isActive }) =>
-                      `hover:text-[#007bff]  block font-bold text-[15px] ${
-                        isActive ? "text-[#007bff]" : "text-gray-600"
-                      }`
-                    }
-                  >
-                    Favorites
-                  </NavLink>
-                </li>
               </ul>
 
-              <ul className="lg:flex lg:items-center ml-auto max-lg:block lg:space-x-8 ml-auto">
+              <ul className="lg:flex lg:items-center  max-lg:block lg:space-x-8 ml-auto">
                 <li
                   className="max-lg:border-b max-lg:py-3 max-lg:mt-2"
                   onClick={logoutButton}
@@ -77,13 +67,6 @@ const Header = () => {
               </ul>
             </div>
           </div>
-
-          {/* <div className="border-l border-[#333] h-6 max-lg:hidden"></div>
-
-    <div className='flex items-center ml-auto space-x-6'>
-      <NavLink to={"/signup"} href='javascript:void(0)' className={({isActive}) =>
-               `hover:text-[#007bff]  block font-bold text-[15px] ${isActive ? "text-[#007bff]" : "text-gray-600"}`}>Sign-Up</NavLink>
-    </div> */}
         </div>
       </header>
     </div>
