@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { toast } from "react-toastify";
+import {  signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
@@ -26,9 +27,13 @@ const Login = () => {
 			try {
 				signInWithEmailAndPassword(auth, value.email, value.password).then((userCredential) => {
 					const user = userCredential.user;
-                    localStorage.setItem("userToken", user.uid)
-					toast.success("Login Successful")
-					navigate("/home")
+					if(user.emailVerified){
+						localStorage.setItem("userToken", user.uid)
+						toast.success("Login Successful")
+						navigate("/home")
+					}else{
+						toast.error("Please Verify Your Email")
+					}
 				}).catch((error) => {
 					toast.error(error.message)
 				})
@@ -38,6 +43,21 @@ const Login = () => {
 
 		},
 	})
+
+	const googleLogin = () => {
+        try {
+            signInWithPopup(auth, new GoogleAuthProvider()).then((result) => {
+                const user = result.user;
+                localStorage.setItem("userToken", user.uid)
+                navigate("/home")
+                toast.success("Login Successful")
+            }).catch((error) => {
+                toast.error(error.message)
+            })
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
 	return (
 		<>		
 		<div className="h-screen md:flex">
@@ -82,7 +102,7 @@ const Login = () => {
 					<span className="text-sm ml-2 hover:text-blue-500 cursor-pointer">Forgot Password ?</span>
 					<button type="submit" className="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Login</button>
 					<section className="flex p-2 gap-4 items-center">
-						<FaGoogle className="cursor-pointer   rounded-full" />
+						<FaGoogle onClick={googleLogin} className="cursor-pointer   rounded-full" />
 						<FaFacebookF className="cursor-pointer" />
 						<FaGithub className="cursor-pointer" />
 						<FaTwitter className="cursor-pointer" />

@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
@@ -8,13 +8,16 @@ import { FaTwitter } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import {auth} from "../firebase"
 import { toast } from "react-toastify";
+import {  signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
 const Signup = () => {
     const [showPassword, setShowPassword] = useState(false);
+
+    const navigate = useNavigate();
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
-    const navigate = useNavigate();
     const { values, handleChange, handleSubmit } = useFormik({
         initialValues: {
             name: "",
@@ -25,19 +28,38 @@ const Signup = () => {
         onSubmit: (value) => {
             try {
                 createUserWithEmailAndPassword(auth, value.email, value.password).then(() => {
-                    navigate("/login")
-                    toast.success("Signup Successful")
+                    sendEmailVerification(auth.currentUser).then(() => {
+                        toast.success("Email verification sent")
+                        navigate("/login")
+                    })
                 }).catch((error) => {
                     toast.error(error.message)
                 })
                 updateProfile(auth.currentUser, {
                     displayName: value.username
+                }).catch((error) => {
+                    console.error(error.message)
                 })
             } catch (error) {
                 toast.error(error);
             }
         },
     })
+
+    const googleLogin = () => {
+        try {
+            signInWithPopup(auth, new GoogleAuthProvider()).then((result) => {
+                const user = result.user;
+                localStorage.setItem("userToken", user.uid)
+                navigate("/home")
+                console.success("Login Successful")
+            }).catch((error) => {
+                console.error(error.message)
+            })
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
     return <div>
         <div className="h-screen md:flex">
             <div
@@ -107,7 +129,7 @@ const Signup = () => {
                     </p>
                     <section className="flex p-2 gap-4">
                         <section className="flex p-2 gap-4 items-center">
-                            <FaGoogle className="cursor-pointer   rounded-full" />
+                            <FaGoogle onClick={googleLogin} className="cursor-pointer   rounded-full" />
                             <FaFacebookF className="cursor-pointer" />
                             <FaGithub className="cursor-pointer" />
                             <FaTwitter className="cursor-pointer" />
