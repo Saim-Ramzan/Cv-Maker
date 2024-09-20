@@ -55,6 +55,7 @@ function RenderCard() {
     <>
      <div className="grid grid-cols-4 gap-8 m-10">
       {iamgeData.map((item) => (
+            // eslint-disable-next-line
         <NavLink to={item.to}>
         <TemplateCard image={item.image} alt={item.alt} name={item.name} />
         </NavLink>

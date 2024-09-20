@@ -22,6 +22,7 @@ const validateMessages = {
     },
 };
 
+// eslint-disable-next-line
 const ExperienceForm = ({goToNextTab}) => {
   const [form] = Form.useForm()
   const onFinish = async (values) => {
@@ -46,6 +47,7 @@ const ExperienceForm = ({goToNextTab}) => {
       };
 
       // Use the correct path for the collection
+      // eslint-disable-next-line
       const docRef = await addDoc(collection(db,  auth.currentUser.uid ), Experience);
       toast.success("Experience added successfully");
       form.resetFields();

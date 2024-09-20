@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
-import { Avatar, Card, Col, Row, Button, Typography } from "antd";
+import { Avatar, Card, Col, Row, Typography } from "antd";
 import avatarImage from "../../assests/images.jpeg";
 
 const { Title, Paragraph } = Typography;

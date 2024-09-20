@@ -21,6 +21,7 @@ const validateMessages = {
   },
 };
 
+// eslint-disable-next-line
 function SkillForm({ goToNextTab }) {
   const [form] = Form.useForm();
 

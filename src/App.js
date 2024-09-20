@@ -16,6 +16,7 @@ import Alpha from "./component/template/Alpha";
 
 function App() {
   return (
+    /* eslint-disable */
     <div>
       <Router>
       <Routes>
@@ -43,5 +44,7 @@ function App() {
     </div>
   );
 }
+/* eslint-enable */
+
 
 export default App;

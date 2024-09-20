@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Form, Input, InputNumber } from 'antd';
 import { addDoc, collection } from "firebase/firestore"; 
 import { auth, db } from "../../../firebase";
@@ -24,7 +24,7 @@ const validateMessages = {
     },
   };
   /* eslint-enable no-template-curly-in-string */
-  
+  // eslint-disable-next-line
   const PersonalForm = ({ goToNextTab }) => {
     const [form] = Form.useForm()
     
@@ -40,6 +40,7 @@ const validateMessages = {
           language: values.user.language
         },
       };
+      // eslint-disable-next-line
       const docRef =  addDoc(collection(db, auth.currentUser.uid), personal)
       toast.success("Personal added successfully");
             form.resetFields()

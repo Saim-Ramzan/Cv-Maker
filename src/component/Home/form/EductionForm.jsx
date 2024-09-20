@@ -21,7 +21,7 @@ const validateMessages = {
     number: "${label} is not a valid number!",
   },
 };
-
+// eslint-disable-next-line
 const EducationForm = ({ goToNextTab }) => {
   const [form] = Form.useForm();
 
@@ -55,6 +55,7 @@ const EducationForm = ({ goToNextTab }) => {
       };
 
       // Use the correct path for the collection
+      // eslint-disable-next-line
       const docRef = await addDoc(
         collection(db, auth.currentUser.uid),
         Education
