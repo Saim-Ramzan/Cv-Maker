@@ -46,9 +46,9 @@ const Signup = () => {
         },
     })
 
-    const googleLogin = () => {
+    const googleLogin = async() => {
         try {
-            signInWithPopup(auth, new GoogleAuthProvider()).then((result) => {
+            await signInWithPopup(auth, new GoogleAuthProvider()).then((result) => {
                 const user = result.user;
                 localStorage.setItem("userToken", user.uid)
                 navigate("/home")

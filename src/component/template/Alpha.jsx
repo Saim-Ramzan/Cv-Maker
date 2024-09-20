@@ -85,7 +85,7 @@ function Alpha() {
         </ul>
       </section>
 
-      <div className="flex items-center gap-2 mt-8 justify-center">
+      <div className="printDiv flex items-center gap-2 mt-8 justify-center">
         <h3 className="text-lg text-gray-800">Feel Free To Download</h3>
         <button
           onClick={downloadCv}

@@ -85,7 +85,7 @@ function Basic() {
         </ul>
       </section>
 
-      <div className="flex items-center gap-2 mt-8">
+      <div className="printDiv flex items-center gap-2 mt-8">
         <h3 className="text-lg">Feel Free To Download</h3>
         <button
           onClick={downloadCv}
